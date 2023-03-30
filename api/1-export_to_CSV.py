@@ -1,10 +1,12 @@
 #!/usr/bin/python3
+"""comments"""
 import csv
 import requests
 import sys
 
 
 if __name__ == '__main__':
+    """comment"""
     if len(sys.argv) < 2:
         print("Usage: ./2-export_to_CSV.py employee_id")
         sys.exit(1)
