@@ -1,25 +1,34 @@
 #!/usr/bin/python3
 """comments"""
 
-import requests
-import sys
+from requests import get
+from sys import argv
 
-if __name__ == "__main__":
-    """comment"""
-    if len(sys.argv) != 2:
-        print("Usage: {} EMPLOYEE_ID".format(sys.argv[0]))
-        sys.exit(1)
+if __name__ == '__main__':
+    """Comments"""
+    def get_api():
+        emp_id = int(argv[1])
+        emp_name = ''
+        tasks_done = 0
+        tasks_total = 0
+        tasks_titles = []
 
-    employee_id = sys.argv[1]
-    response = requests.get("https://jsonplaceholder.typicode.com/todos", params={"userId": employee_id})
-    response.raise_for_status()
-    todos = response.json()
-    num_completed = sum(1 for todo in todos if todo["completed"])
-    total = len(todos)
-    employee_name = todos[0]["name"]
+        users_res = get('https://jsonplaceholder.typicode.com/users').json()
+        for user in users_res:
+            if user['id'] == emp_id:
+                emp_name = user['name']
+                break
 
-    print("Employee {} is done with tasks({}/{}):".format(employee_name, num_completed, total))
+        tasks_res = get('https://jsonplaceholder.typicode.com/todos').json()
+        for task in tasks_res:
+            if task['userId'] == emp_id:
+                if task['completed']:
+                    tasks_titles.append(task['title'])
+                    tasks_done += 1
+                tasks_total += 1
 
-    for todo in todos:
-        if todo["completed"]:
-            print("\t {}".format(todo["title"]))
+        print('Employee {} is done with tasks({}/{}):'.format(emp_name,
+                                                          tasks_done,
+                                                          tasks_total))
+        for title in tasks_titles:
+            print('\t {}'.format(title))
