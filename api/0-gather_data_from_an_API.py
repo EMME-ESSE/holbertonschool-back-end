@@ -5,10 +5,14 @@ import requests
 import sys
 
 if __name__ == '__main__':
+    try:
+        employee_id = int(sys.argv[1])
+    except Exception:
+        print("Please insert an integer as a parameter")
+        exit()
 
     total_tasks = 0
     done_tasks = 0
-    employee_id = int(sys.argv[1])
     user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(
         employee_id)
     url = 'https://jsonplaceholder.typicode.com/todos/?userId={}'.format(
