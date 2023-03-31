@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """comments"""
-
 import requests
 
 def get_employee_todo_progress(employee_id):
