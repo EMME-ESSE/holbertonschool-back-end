@@ -2,29 +2,16 @@
 """comments"""
 
 import requests
-import sys
 
-if __name__ == '__main__':
-
-    total_tasks = 0
-    done_tasks = 0
-    employee_id = int(sys.argv[1])
-    user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(
-        employee_id)
-    url = 'https://jsonplaceholder.typicode.com/todos/?userId={}'.format(
-        employee_id)
-
-    user_response = requests.get(user_url).json().get('name')
-    response = requests.get(url).json()
-
-    for task in response:
-        total_tasks += 1
-        if task['completed'] is True:
-            done_tasks += 1
-
-    print("Employee {} is done with tasks({}/{}):".format(user_response,
-          done_tasks, total_tasks))
-
-    for task in response:
-        if task['completed'] is True:
-            print("\t {}".format(task['title']))
+def get_employee_todo_progress(employee_id):
+    """Comments"""
+    response = requests.get(f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}")
+    data = response.json()
+    total_tasks = len(data)
+    completed_tasks = sum(1 for task in data if task["completed"])
+    employee_name = data[0]["name"].split(":")[0]
+    print(f"Employee {employee_name} is done with tasks ({completed_tasks}/{total_tasks}):")
+    for task in data:
+        if task["completed"]:
+            print(f"\t- {task['title']}")
+get_employee_todo_progress(1)
