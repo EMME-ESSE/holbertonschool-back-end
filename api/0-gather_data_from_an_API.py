@@ -4,33 +4,25 @@ import requests
 from sys import argv
 
 
-def get_todo_list(employee_id):
-    """Gets the todo list from the employees"""
-    employee = requests.get(
-        "https://jsonplaceholder.typicode.com/users?id={}"
-        .format(employee_id))
-    employee_todo = requests.get(
-        "https://jsonplaceholder.typicode.com/todos?userId={}"
-        .format(employee_id))
-
-    employee_name = None
-    number_tasks_done = []
-    number_tasks_total = 0
-
-    for value in employee.json():
-        employee_name = value.get('name')
-
-    for value in employee_todo.json():
-        number_tasks_total += 1
-        if value.get('completed'):
-            number_tasks_done.append(value.get('title'))
-
-    print("Employee {} is done with tasks({}/{}):".format
-        (employee_name, len(number_tasks_done), number_tasks_total))
-
-    for i in number_tasks_done:
-        print("{} {}".format('\t', i))
+def _data():
+    """Comments"""
+    user_id = int(argv[1])
+    users = requests.get('https://jsonplaceholder.typicode.com/users/{}'
+                         .format(user_id))
+    users_json = users.json()
+    todos = requests.get('https://jsonplaceholder.typicode.com/todos?userId={}'
+                         .format(user_id))
+    todos_json = todos.json()
+    completed_tasks, tasks, task_list = 0, 0, []
+    for t in todos_json:
+        if t['completed'] is True:
+            completed_tasks += 1
+            task_list.append("\t {}".format(t['title']))
+        tasks += 1
+    print("Employee {} is done with tasks({}/{}):"
+          .format(users_json['name'], completed_tasks, tasks))
+    print(*task_list, sep='\n')
 
 
 if __name__ == '__main__':
-    get_todo_list(sys.argv[1])
+    _data()
