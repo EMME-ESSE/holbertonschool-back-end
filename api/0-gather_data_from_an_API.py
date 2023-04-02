@@ -3,6 +3,7 @@
 from requests import get
 from sys import argv
 
+
 def get_api():
     """Comments"""
     emp_id = int(argv[1])
