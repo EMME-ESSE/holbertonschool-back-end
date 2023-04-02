@@ -1,21 +1,37 @@
 #!/usr/bin/python3
-"""comments"""
-import requests
+"""Commenting"""
+from requests import get
+from sys import argv
+
+
+def get_api():
+    """Comments"""
+    emp_id = int(argv[1])
+    emp_name = ''
+    tasks_done = 0
+    tasks_total = 0
+    tasks_titles = []
+
+    users_res = get('https://jsonplaceholder.typicode.com/users').json()
+    for user in users_res:
+        if user['id'] == emp_id:
+            emp_name = user['name']
+            break
+
+    tasks_res = get('https://jsonplaceholder.typicode.com/todos').json()
+    for task in tasks_res:
+        if task['userId'] == emp_id:
+            if task['completed']:
+                tasks_titles.append(task['title'])
+                tasks_done += 1
+            tasks_total += 1
+
+    print('Employee {} is done with tasks({}/{}):'.format(emp_name,
+                                                          tasks_done,
+                                                          tasks_total))
+    for title in tasks_titles:
+        print('\t {}'.format(title))
+
 
 if __name__ == '__main__':
-    """Commented"""
-    def get_employee_todo_progress(employee_id):
-        rs1 = "https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
-        rs2 = "https://jsonplaceholder.typicode.com/users/{employee_id}"
-        response = requests.get(rs1.format())
-        data = response.json(rs2)
-        total = len(data)
-        completed = sum(1 for task in data if task["completed"])
-        response = requests.get(f)
-        name = response.json()["name"]
-        print(f"Employee {name} is done with tasks ({completed}/{total}):")
-        for task in data:
-            if task["completed"]:
-                print(f"\t- {task['title']}")
-    get_employee_todo_progress(1)
-
+    get_api()

@@ -1,25 +1,29 @@
 #!/usr/bin/python3
-"""
-Module 1-export_to_csv
-"""
+"""Commenting"""
 import csv
 import requests
 from sys import argv
 
 
+def get_api():
+    """Comments"""
+    url = 'https://jsonplaceholder.typicode.com/'
+    uid = argv[1]
+
+    usr = requests.get(url + 'users/{}'.format(uid)).json()
+    todo = requests.get(url + 'todos', params={'userId': uid}).json()
+
+    with open('{}.csv'.format(uid), 'w') as file:
+        writer = csv.writer(file, quoting=csv.QUOTE_ALL)
+        for employee in todo:
+            user_id = uid
+            username = usr.get('username')
+            task_comp = employee.get('completed')
+            task_title = employee.get('title')
+
+            emp_record = [user_id, username, task_comp, task_title]
+            writer.writerow(emp_record)
+
+
 if __name__ == '__main__':
-
-    resp = requests.get(
-        'https://jsonplaceholder.typicode.com/users/{}'.format(argv[1]))
-    user_name = resp.json().get('username')
-
-    resp = requests.get(
-        'https://jsonplaceholder.typicode.com/users/{}/todos'.format(argv[1]))
-
-    with open(argv[1] + '.csv', 'w') as file:
-        for todo_item in resp.json():
-            writer = csv.writer(file, quoting=csv.QUOTE_ALL)
-            writer.writerow([todo_item['userId'],
-                             user_name,
-                             todo_item['completed'],
-                             todo_item['title']])
+    get_api()
