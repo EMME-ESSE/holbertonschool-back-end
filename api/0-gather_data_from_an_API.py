@@ -1,28 +1,34 @@
 #!/usr/bin/python3
-"""Commented"""
+"""Commenting"""
 import requests
-from sys import argv
-
-
-def _data():
-    """Comments"""
-    user_id = int(argv[1])
-    users = requests.get('https://jsonplaceholder.typicode.com/users/{}'
-                         .format(user_id))
-    users_json = users.json()
-    todos = requests.get('https://jsonplaceholder.typicode.com/todos?userId={}'
-                         .format(user_id))
-    todos_json = todos.json()
-    completed_tasks, tasks, task_list = 0, 0, []
-    for t in todos_json:
-        if t['completed'] is True:
-            completed_tasks += 1
-            task_list.append("\t {}".format(t['title']))
-        tasks += 1
-    print("Employee {} is done with tasks({}/{}):"
-          .format(users_json['name'], completed_tasks, tasks))
-    print(*task_list, sep='\n')
-
+import sys
 
 if __name__ == '__main__':
-    _data()
+    """Comments"""
+    try:
+        emp_id = int(sys.argv[1])
+    except Exception:
+        print("Please insert an integer as a parameter")
+        exit()
+
+    finished_tasks = 0
+    total_tasks = 0
+
+    user_url = 'https://jsonplaceholder.typicode.com/users/{}'.format(emp_id)
+    api_url = 'https://jsonplaceholder.typicode.com/todos/?userId={}'.format(
+        emp_id)
+
+    user_response = requests.get(user_url).json().get('name')
+    api_response = requests.get(api_url).json()
+
+    for task in api_response:
+        total_tasks += 1
+        if task['completed'] is True:
+            finished_tasks += 1
+
+    print("Employee {} is done with tasks({}/{}):".format(user_response,
+          finished_tasks, total_tasks))
+
+    for task in api_response:
+        if task['completed'] is True:
+            print("\t {}".format(task['title']))
