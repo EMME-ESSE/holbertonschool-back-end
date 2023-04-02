@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Comments"""
+"""Commented"""
 import requests
 from sys import argv
 
